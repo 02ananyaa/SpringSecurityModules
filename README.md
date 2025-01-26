@@ -5,7 +5,7 @@ The Spring Security Modules project is designed to demonstrate and implement all
 
 This project serves as a learning tool and reference for integrating Spring Security features into Spring Boot applications.
 
-### **Method 1: Default Authentication Behavior**
+# **Method 1: Default Authentication Behavior**
 
 When you add **Spring Security** to your Spring Boot project, it automatically configures basic authentication with a default user. This is the easiest way to secure your application without needing to configure anything manually.
 
@@ -39,7 +39,7 @@ Example for Maven:
 </dependency>
 ```
 
-## Method 2: Custom Authentication Using `application.properties`
+# Method 2: Custom Authentication Using `application.properties`
 
 Spring Security allows customization of the default username and password by simply defining properties in the `application.properties` file.
 
@@ -63,7 +63,7 @@ Testing Custom Credentials
 Access any endpoint in your application, and you'll be prompted for login credentials.
 Enter the username and password from application.properties.
 
-### ** Method 3: Custom Authentication Using Security Filter Chain or IN-MEMORY AUTHENTICATION **
+# ** Method 3: Custom Authentication Using Security Filter Chain or IN-MEMORY AUTHENTICATION **
 For more control over authentication, you can configure a SecurityFilterChain in your application. This method allows you to define custom users, passwords, roles, and other advanced authentication logic.
 
 ### Steps to Set Custom Authentication:
@@ -127,7 +127,7 @@ Username: customUser
 Password: customPassword
 
 
-## Method 4:  User Authentication from Database
+# Method 4:  User Authentication from Database
 
 # Spring Security: Configuring Users from a Database
 
@@ -161,7 +161,7 @@ Add the required dependencies to your `pom.xml` for Spring Security and Spring D
     </dependency>
 </dependencies>
 ```
-2. **Configure the Application Properties**
+### 2. Configure the Application Properties:
 ``` xml
 spring.datasource.url=jdbc:mysql://localhost:3306/your_database_name
 spring.datasource.username=your_database_user
@@ -172,7 +172,7 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 ```
 
-3.** Create a User Entity:**
+ ### 3. Create a User Entity:
 ``` xml
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -188,7 +188,7 @@ public class User {
     // Getters and Setters
 }
 ```
-4. **Create a Repository for Users** 
+ ### 4. Create a Repository for Users
 Define a repository interface for accessing user data:
 ``` xml
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -197,7 +197,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
 }
 ```
-5. ** Implement a Custom UserDetailsService**
+ ### 5. Implement a Custom UserDetailsService
 Create a service to load user details from the database:
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -227,7 +227,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .build();
     }
 }
-6. **Configure Security with SecurityFilterChain **
+### 6. Configure Security with SecurityFilterChain 
 Set up Spring Security to use the custom UserDetailsService:
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -278,7 +278,7 @@ public class SecurityConfig {
     }
 }
 
-7.** Test the Setup **
+ ### 7. Test the Setup 
 1.Run the application.
 2.Try accessing any secured endpoint.
 3.Enter the credentials for the user stored in the database:
