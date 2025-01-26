@@ -37,3 +37,90 @@ Example for Maven:
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
 </dependency>
+```
+
+## Method 2: Custom Authentication Using `application.properties`
+
+Spring Security allows customization of the default username and password by simply defining properties in the `application.properties` file.
+
+### Steps to Set Custom Authentication:
+
+1. **Add Custom Username and Password**  
+   Add the following lines to your `application.properties` file:
+   ```properties
+   spring.security.user.name=customUser
+   spring.security.user.password=customPassword
+   ```
+2. How It Works
+
+Spring Security will use the username and password defined in the application.properties file instead of the default ones.
+Use the credentials:
+Username: customUser
+Password: customPassword
+Testing Custom Credentials
+
+3. Run the application.
+Access any endpoint in your application, and you'll be prompted for login credentials.
+Enter the username and password from application.properties.
+
+### Method 3: Custom Authentication Using Security Filter Chain
+For more control over authentication, you can configure a SecurityFilterChain in your application. This method allows you to define custom users, passwords, roles, and other advanced authentication logic.
+
+### Steps to Set Custom Authentication:
+1.Create a Security Configuration Class
+Define a SecurityConfig class in your project:
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf().disable()
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().authenticated()
+            )
+            .formLogin();
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+
+2. Add a Custom User
+Configure an in-memory user with a custom username and password:
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+@Bean
+public UserDetailsService userDetailsService() {
+    UserDetails user = User.withUsername("customUser")
+                           .password(passwordEncoder().encode("customPassword"))
+                           .roles("USER")
+                           .build();
+    return new InMemoryUserDetailsManager(user);
+}
+
+3. How It Works
+
+Spring Security uses the custom user defined in the UserDetailsService.
+The securityFilterChain secures all requests by default, and a login form is displayed when accessing any endpoint.
+Testing Custom Authentication
+
+4. Run the application.
+Access the /login page.
+Use the following credentials:
+Username: customUser
+Password: customPassword
